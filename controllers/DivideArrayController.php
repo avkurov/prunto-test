@@ -40,7 +40,7 @@ final class DivideArrayController extends Controller
         }
 
         $array = json_decode($arrayStr, true);
-        if ($array === null) {
+        if ($array === null || !is_array($array)) {
             throw new BadRequestHttpException('Bad format of the array');
         }
 
