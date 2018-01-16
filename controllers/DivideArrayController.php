@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\ArrayDivider;
+use app\models\ArrayDivideRequest;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
@@ -22,6 +23,8 @@ final class DivideArrayController extends Controller
 
         $divider = new ArrayDivider();
         $result = $divider->getDividerNumber($array, $number);
+
+        $this->saveResult($array, $number, $result);
 
         return ['result' => $result];
     }
@@ -59,6 +62,16 @@ final class DivideArrayController extends Controller
         }
 
         return $number;
+    }
+
+    private function saveResult(array $array, int $number, int $result): void
+    {
+        $model = new ArrayDivideRequest();
+        $model->user_id = Yii::$app->user->id;
+        $model->array = json_encode($array);
+        $model->number = $number;
+        $model->result = $result;
+        $model->save();
     }
 
     public function behaviors()
